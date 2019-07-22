@@ -16,7 +16,11 @@ const Board = ({ dims }) => {
       {arr.map((dim, key) => {
         const active = activeSquare(key);
         return (
-          <Square key={key} onClick={() => onSquareClick({ key, type: "X" })}>
+          <Square
+            data-testid="square"
+            key={key}
+            onClick={() => onSquareClick({ key, type: "X" })}
+          >
             {active && <Marker>{active.type}</Marker>}
           </Square>
         );
