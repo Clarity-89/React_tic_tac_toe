@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { SQUARE_WIDTH } from "./constants";
 
 const Board = ({ dims }) => {
   const [activeSquares, setActiveSquares] = useState([]);
@@ -16,7 +17,7 @@ const Board = ({ dims }) => {
         const active = activeSquare(key);
         return (
           <Square key={key} onClick={() => onSquareClick({ key, type: "X" })}>
-            {active && <span>{active.type}</span>}
+            {active && <Marker>{active.type}</Marker>}
           </Square>
         );
       })}
@@ -26,17 +27,25 @@ const Board = ({ dims }) => {
 
 const Container = styled.div`
   display: flex;
-  width: ${({ dims }) => `${dims * 55}px`};
+  width: ${({ dims }) => `${dims * (SQUARE_WIDTH + 5)}px`};
   flex-flow: wrap;
 `;
+
 const Square = styled.div`
-  width: 50px;
-  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: ${SQUARE_WIDTH}px;
+  height: ${SQUARE_WIDTH}px;
   border: 1px solid black;
 
   &:hover {
     cursor: pointer;
   }
+`;
+
+const Marker = styled.span`
+  font-size: 48px;
 `;
 
 Board.propTypes = {

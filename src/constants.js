@@ -6,3 +6,4 @@ export const SCORES = {
   0: 0,
   2: -1
 };
+export const SQUARE_WIDTH = 50;
