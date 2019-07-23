@@ -10,8 +10,11 @@ const Board = ({ dims }) => {
   const arr = [...new Array(dims * dims).keys()];
   const activeSquare = key => activeSquares.find(sq => sq.key === key);
 
-  const playerMove = key => {
+  const humanMove = key => {
     setActiveSquares(squares => [...squares, { key, type: players.human }]);
+    if (checkWin()) {
+      declareWinner();
+    }
   };
 
   const getEmptySquares = () => {
@@ -46,11 +49,7 @@ const Board = ({ dims }) => {
         const active = activeSquare(key);
 
         return (
-          <Square
-            data-testid="square"
-            key={key}
-            onClick={() => playerMove(key)}
-          >
+          <Square data-testid="square" key={key} onClick={() => humanMove(key)}>
             {active && <Marker>{active.type === PLAYER_X ? "X" : "O"}</Marker>}
           </Square>
         );
