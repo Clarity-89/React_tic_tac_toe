@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { PLAYER_X, PLAYER_O, SQUARE_WIDTH } from "./constants";
+import {
+  PLAYER_X,
+  PLAYER_O,
+  SQUARE_WIDTH,
+  DRAW,
+  GAME_STATES
+} from "./constants";
 
 const Board = ({ dims }) => {
   const [players, setPlayers] = useState({ human: null, computer: null });
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameState, setGameState] = useState(GAME_STATES.notStarted);
   const arr = new Array(dims * dims).fill(null);
   const [grid, setGrid] = useState(arr);
+  const [winner, setWinner] = useState(null);
 
   // TODO deep compare grid
   useEffect(() => {
-    if (checkWin()) {
-      declareWinner();
+    const winner = getWinner();
+    if (winner) {
+      setGameState(GAME_STATES.over);
+      declareWinner(winner);
     }
   }, [grid]);
 
@@ -46,10 +55,10 @@ const Board = ({ dims }) => {
 
   const choosePlayer = option => {
     setPlayers({ human: option, computer: switchPlayer(option) });
-    setGameStarted(true);
+    setGameState(GAME_STATES.inProgress);
   };
 
-  const checkWin = () => {
+  const getWinner = () => {
     const winningCombos = [
       [0, 1, 2],
       [3, 4, 5],
@@ -60,36 +69,80 @@ const Board = ({ dims }) => {
       [0, 4, 8],
       [2, 4, 6]
     ];
-
-    return null;
+    let res = null;
+    winningCombos.forEach(function(el) {
+      if (
+        grid[el[0]] !== null &&
+        grid[el[0]] === grid[el[1]] &&
+        grid[el[0]] === grid[el[2]]
+      ) {
+        res = grid[el[0]];
+      } else if (res === null && getEmptySquares().length === 0) {
+        res = DRAW;
+      }
+    });
+    return res;
   };
 
-  const declareWinner = () => null;
-  return gameStarted ? (
-    <Container dims={dims}>
-      {grid.map((value, index) => {
-        const isActive = value !== null;
+  const declareWinner = winner => {
+    let winnerStr;
+    switch (winner) {
+      case PLAYER_X:
+        winnerStr = "The winner is Player X";
+        break;
+      case PLAYER_O:
+        winnerStr = "The winner is Player O";
+        break;
+      case DRAW:
+      default:
+        winnerStr = "It's a draw";
+    }
+    setWinner(winnerStr);
+  };
 
-        return (
-          <Square
-            data-testid="square"
-            key={index}
-            onClick={() => humanMove(index)}
-          >
-            {isActive && <Marker>{value === PLAYER_X ? "X" : "O"}</Marker>}
-          </Square>
-        );
-      })}
-    </Container>
-  ) : (
-    <StartScreen>
-      <Inner>
-        <ChooseText>Choose your player</ChooseText>
-        <span onClick={() => choosePlayer(PLAYER_X)}>X</span> or{" "}
-        <span onClick={() => choosePlayer(PLAYER_O)}>O</span>
-      </Inner>
-    </StartScreen>
-  );
+  const startNewGame = () => {
+    setGameState(GAME_STATES.notStarted);
+    setGrid(arr);
+  };
+
+  switch (gameState) {
+    case GAME_STATES.inProgress:
+      return (
+        <Container dims={dims}>
+          {grid.map((value, index) => {
+            const isActive = value !== null;
+
+            return (
+              <Square
+                data-testid="square"
+                key={index}
+                onClick={() => humanMove(index)}
+              >
+                {isActive && <Marker>{value === PLAYER_X ? "X" : "O"}</Marker>}
+              </Square>
+            );
+          })}
+        </Container>
+      );
+    case GAME_STATES.notStarted:
+    default:
+      return (
+        <Screen>
+          <Inner>
+            <ChooseText>Choose your player</ChooseText>
+            <span onClick={() => choosePlayer(PLAYER_X)}>X</span> or{" "}
+            <span onClick={() => choosePlayer(PLAYER_O)}>O</span>
+          </Inner>
+        </Screen>
+      );
+    case GAME_STATES.over:
+      return (
+        <Screen>
+          <p>{winner}</p>
+          <Button onClick={startNewGame}>Start over</Button>
+        </Screen>
+      );
+  }
 };
 
 const Container = styled.div`
@@ -115,9 +168,10 @@ const Marker = styled.span`
   font-size: 48px;
 `;
 
-const StartScreen = styled.div``;
+const Screen = styled.div``;
 const Inner = styled.div``;
 const ChooseText = styled.p``;
+const Button = styled.button``;
 
 Board.propTypes = {
   dims: PropTypes.number
