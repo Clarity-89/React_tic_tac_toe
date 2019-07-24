@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import {
@@ -6,15 +6,29 @@ import {
   PLAYER_O,
   SQUARE_WIDTH,
   DRAW,
-  GAME_STATES
+  GAME_STATES,
+  SCORES
 } from "./constants";
+import BoardClass from "./board";
 
+function reducer(state, action) {
+  switch (action.type) {
+    case "add":
+      const g = state.concat();
+      g[action.index] = action.player;
+      return g;
+    default:
+      throw new Error();
+  }
+}
 const Board = ({ dims }) => {
   const [players, setPlayers] = useState({ human: null, computer: null });
   const [gameState, setGameState] = useState(GAME_STATES.notStarted);
   const arr = new Array(dims * dims).fill(null);
-  const [grid, setGrid] = useState(arr);
+  // const [grid, setGrid] = useState(arr);
+  const [grid, dispatch] = useReducer(reducer, arr);
   const [winner, setWinner] = useState(null);
+  //let grid = arr.concat();
 
   // TODO deep compare grid
   useEffect(() => {
@@ -23,30 +37,68 @@ const Board = ({ dims }) => {
       setGameState(GAME_STATES.over);
       declareWinner(winner);
     }
-  }, [grid]);
+  }, []);
+
+  const move = (index, player) => {
+    if (!grid[index]) {
+      // setGrid(grid => {
+      //   const g = grid.concat();
+      //   g[index] = player;
+      //   return g;
+      // });
+      dispatch({ type: "add", index, player });
+    }
+  };
+
+  const minimax = (board, player) => {
+    console.log("gr", board);
+    const mult = SCORES[String(player)];
+    const empty = board.getEmptySquares();
+    console.log("em", empty);
+    const l = empty.length;
+    let thisScore;
+    let maxScore = -1;
+    let bestMove = null;
+
+    if (board.getWinner() !== null) {
+      return [SCORES[board.getWinner()], 0];
+    } else {
+      for (let i = 0; i < l; i++) {
+        let copy = board.clone();
+        board.makeMove(empty[i], player);
+        thisScore = mult * minimax(copy, switchPlayer(player))[0];
+
+        if (thisScore >= maxScore) {
+          maxScore = thisScore;
+          bestMove = empty[i];
+        }
+      }
+
+      return [mult * maxScore, bestMove];
+    }
+  };
 
   const humanMove = index => {
-    if (!grid[index]) {
-      setGrid(grid => {
-        const g = grid.concat();
-        g[index] = players.human;
-        return g;
-      });
-    }
+    move(index, players.human);
 
     // TODO move computer
+    computerMove();
   };
 
   const computerMove = () => {
-    const index = 1;
-    setGrid(grid => {
-      grid[index] = players.computer;
-      return grid;
-    });
+    const board = new BoardClass(grid);
+    const index = minimax(board, players.computer)[1];
+    console.log("index", index);
+    //move(index, players.computer);
   };
 
+  // Collect indices of empty squares and return them
   const getEmptySquares = () => {
-    return grid.filter(square => square === null);
+    let squares = [];
+    grid.forEach((square, i) => {
+      if (square === null) squares.push(i);
+    });
+    return squares;
   };
 
   const switchPlayer = player => {
@@ -102,7 +154,7 @@ const Board = ({ dims }) => {
 
   const startNewGame = () => {
     setGameState(GAME_STATES.notStarted);
-    setGrid(arr);
+    //setGrid(arr);
   };
 
   switch (gameState) {
