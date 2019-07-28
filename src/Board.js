@@ -47,6 +47,6 @@ export default class Board {
   };
 
   clone = () => {
-    return new Board(this.grid);
+    return new Board(this.grid.concat());
   };
 }

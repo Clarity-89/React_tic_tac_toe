@@ -119,3 +119,31 @@ describe("makeMove", () => {
     expect(board.grid[1]).toBe(PLAYER_X);
   });
 });
+
+describe("clone", function() {
+  let board;
+  it("should make a copy of the board", function() {
+    board = new Board([1, null, null, null, null, null, null, null, null]);
+    const copy = board.clone();
+
+    expect(JSON.stringify(board)).toBe(JSON.stringify(copy));
+  });
+
+  it("the original board should not be affected by changes to copy", function() {
+    board = new Board([1, null, null, null, null, null, null, null, null]);
+    const copy = board.clone();
+    copy.makeMove(2, PLAYER_O);
+    expect(board.grid).not.toStrictEqual(copy.grid);
+    expect(board.grid).toStrictEqual([
+      1,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]);
+  });
+});
