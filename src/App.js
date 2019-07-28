@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import Board from "./Board";
+import TicTacToe from "./TicTacToe";
 
 function App() {
   return (
     <Main>
-      <Board />
+      <TicTacToe />
     </Main>
   );
 }
