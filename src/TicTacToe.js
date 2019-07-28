@@ -54,7 +54,7 @@ const TicTacToe = () => {
     if (nextMove !== null && nextMove === players.computer) {
       computerMove();
     }
-  }, [nextMove, computerMove, players]);
+  }, [nextMove, computerMove, players.computer]);
 
   const humanMove = index => {
     move(index, players.human);
