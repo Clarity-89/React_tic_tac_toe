@@ -39,7 +39,7 @@ export default class Board {
         grid[el[0]] === grid[el[2]]
       ) {
         res = grid[el[0]];
-      } else if (res === null && this.getEmptySquares().length === 0) {
+      } else if (res === null && this.getEmptySquares(grid).length === 0) {
         res = DRAW;
       }
     });
