@@ -10,7 +10,7 @@ import {
   DIMS
 } from "./constants";
 import BoardClass from "./Board";
-import { switchPlayer } from "./utils";
+import { getRandomInt, switchPlayer } from "./utils";
 import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
 
@@ -25,6 +25,9 @@ const TicTacToe = () => {
   const [nextMove, setNextMove] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  /**
+   * On every move, check if there is a winner. If yes, set game state to over and open result modal
+   */
   useEffect(() => {
     const winner = board.getWinner(grid);
     const declareWinner = winner => {
@@ -50,9 +53,15 @@ const TicTacToe = () => {
     }
   }, [gameState, grid, nextMove]);
 
+  /**
+   * Set the grid square with respective player that made the move. Only make a move when the game is in progress.
+   * useCallback is necessary to prevent unnecessary recreation of the function, unless gameState changes, since it is
+   * being tracked in useEffect
+   * @type {Function}
+   */
   const move = useCallback(
     (index, player) => {
-      if (!grid[index] && player && gameState === GAME_STATES.inProgress) {
+      if (player && gameState === GAME_STATES.inProgress) {
         setGrid(grid => {
           const gridCopy = grid.concat();
           gridCopy[index] = player;
@@ -60,19 +69,29 @@ const TicTacToe = () => {
         });
       }
     },
-    [gameState, grid]
+    [gameState]
   );
 
+  /**
+   * Make computer move. If it's the first move (board is empty), make move at any random cell to skip
+   * unnecessary minimax calculations
+   * @type {Function}
+   */
   const computerMove = useCallback(() => {
     // Important to pass a copy of the grid here
     const board = new BoardClass(grid.concat());
-    const index = board.isEmpty(grid) ? 4 : minimax(board, players.computer)[1];
+    const index = board.isEmpty(grid)
+      ? getRandomInt(0, 8)
+      : minimax(board, players.computer)[1];
     if (!grid[index]) {
       move(index, players.computer);
       setNextMove(players.human);
     }
   }, [move, grid, players]);
 
+  /**
+   * Make computer move when it's computer's turn
+   */
   useEffect(() => {
     if (nextMove !== null && nextMove === players.computer) {
       computerMove();
