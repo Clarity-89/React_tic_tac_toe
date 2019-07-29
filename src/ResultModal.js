@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Modal from "react-modal";
+import { border } from "./styles";
 
 const customStyles = {
   overlay: {
@@ -31,7 +32,7 @@ const StyledModal = styled(Modal)`
   top: 10%;
   right: auto;
   bottom: auto;
-  width: 300px;
+  width: 320px;
   outline: none;
   display: flex;
   flex-direction: column;
@@ -48,7 +49,7 @@ const ModalWrapper = styled.div`
   backface-visibility: hidden;
   border: 2px solid #e6e7e9;
   padding: 1.25rem;
-  border-radius: 0;
+  ${border}
 `;
 
 const ModalTitle = styled.p`

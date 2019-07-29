@@ -13,6 +13,7 @@ import BoardClass from "./Board";
 import { getRandomInt, switchPlayer } from "./utils";
 import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
+import { border } from "./styles";
 
 const arr = new Array(DIMS ** 2).fill(null);
 const board = new BoardClass();
@@ -166,11 +167,7 @@ const Square = styled.div`
   align-items: center;
   width: ${SQUARE_DIMS}px;
   height: ${SQUARE_DIMS}px;
-  border-bottom-left-radius: 15px 255px;
-  border-bottom-right-radius: 225px 15px;
-  border-top-left-radius: 255px 15px;
-  border-top-right-radius: 15px 225px;
-  border: 2px solid #41403e;
+  ${border}
 
   &:hover {
     cursor: pointer;
