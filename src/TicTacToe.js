@@ -12,6 +12,7 @@ import {
 import BoardClass from "./Board";
 import { switchPlayer } from "./utils";
 import { minimax } from "./minimax";
+import { ResultModal } from "./ResultModal";
 
 const TicTacToe = () => {
   const [players, setPlayers] = useState({ human: null, computer: null });
@@ -20,18 +21,37 @@ const TicTacToe = () => {
   const [grid, setGrid] = useState(arr);
   const [winner, setWinner] = useState(null);
   const [nextMove, setNextMove] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const board = new BoardClass();
 
   useEffect(() => {
     const winner = board.getWinner(grid);
-    if (winner !== null) {
+    const declareWinner = winner => {
+      let winnerStr;
+      switch (winner) {
+        case PLAYER_X:
+          winnerStr = "Player X wins!";
+          break;
+        case PLAYER_O:
+          winnerStr = "Player O wins!";
+          break;
+        case DRAW:
+        default:
+          winnerStr = "It's a draw";
+      }
+      setGameState(GAME_STATES.over);
+      setWinner(winnerStr);
+      setModalOpen(true);
+    };
+
+    if (winner !== null && gameState !== GAME_STATES.over) {
       declareWinner(winner);
     }
-  });
+  }, [board, gameState, grid, nextMove]);
 
   const move = useCallback(
     (index, player) => {
-      if (!grid[index] && player) {
+      if (!grid[index] && player && gameState === GAME_STATES.inProgress) {
         setGrid(grid => {
           const gridCopy = grid.concat();
           gridCopy[index] = player;
@@ -39,7 +59,7 @@ const TicTacToe = () => {
         });
       }
     },
-    [grid]
+    [gameState, grid]
   );
 
   const computerMove = useCallback(() => {
@@ -67,66 +87,43 @@ const TicTacToe = () => {
     setNextMove(PLAYER_X);
   };
 
-  const declareWinner = winner => {
-    let winnerStr;
-    switch (winner) {
-      case PLAYER_X:
-        winnerStr = "Player X wins!";
-        break;
-      case PLAYER_O:
-        winnerStr = "Player O wins!";
-        break;
-      case DRAW:
-      default:
-        winnerStr = "It's a draw";
-    }
-    setGameState(GAME_STATES.over);
-    setWinner(winnerStr);
-  };
-
   const startNewGame = () => {
     setGameState(GAME_STATES.notStarted);
     setGrid(arr);
+    setModalOpen(false);
   };
 
-  switch (gameState) {
-    case GAME_STATES.inProgress:
-      return (
-        <Container dims={DIMS}>
-          {grid.map((value, index) => {
-            const isActive = value !== null;
+  return gameState === GAME_STATES.notStarted ? (
+    <Screen>
+      <Inner>
+        <ChooseText>Choose your player</ChooseText>
+        <span onClick={() => choosePlayer(PLAYER_X)}>X</span> or{" "}
+        <span onClick={() => choosePlayer(PLAYER_O)}>O</span>
+      </Inner>
+    </Screen>
+  ) : (
+    <Container dims={DIMS}>
+      {grid.map((value, index) => {
+        const isActive = value !== null;
 
-            return (
-              <Square
-                data-testid="square"
-                key={index}
-                onClick={() => humanMove(index)}
-              >
-                {isActive && <Marker>{value === PLAYER_X ? "X" : "O"}</Marker>}
-              </Square>
-            );
-          })}
-        </Container>
-      );
-    case GAME_STATES.notStarted:
-    default:
-      return (
-        <Screen>
-          <Inner>
-            <ChooseText>Choose your player</ChooseText>
-            <span onClick={() => choosePlayer(PLAYER_X)}>X</span> or{" "}
-            <span onClick={() => choosePlayer(PLAYER_O)}>O</span>
-          </Inner>
-        </Screen>
-      );
-    case GAME_STATES.over:
-      return (
-        <Screen>
-          <p>{winner}</p>
-          <Button onClick={startNewGame}>Start over</Button>
-        </Screen>
-      );
-  }
+        return (
+          <Square
+            data-testid="square"
+            key={index}
+            onClick={() => humanMove(index)}
+          >
+            {isActive && <Marker>{value === PLAYER_X ? "X" : "O"}</Marker>}
+          </Square>
+        );
+      })}
+      <ResultModal
+        isOpen={modalOpen}
+        winner={winner}
+        close={() => setModalOpen(false)}
+        startNewGame={startNewGame}
+      />
+    </Container>
+  );
 };
 
 const Container = styled.div`
@@ -155,7 +152,6 @@ const Marker = styled.span`
 const Screen = styled.div``;
 const Inner = styled.div``;
 const ChooseText = styled.p``;
-const Button = styled.button``;
 
 TicTacToe.propTypes = {
   dims: PropTypes.number
