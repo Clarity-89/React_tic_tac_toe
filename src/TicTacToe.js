@@ -46,7 +46,8 @@ const TicTacToe = () => {
       }
       setGameState(GAME_STATES.over);
       setWinner(winnerStr);
-      setModalOpen(true);
+      // Slight delay for the modal so there is some time to see the last move
+      setTimeout(() => setModalOpen(true), 300);
     };
 
     if (winner !== null && gameState !== GAME_STATES.over) {
@@ -85,7 +86,8 @@ const TicTacToe = () => {
       ? getRandomInt(0, 8)
       : minimax(board, players.computer)[1];
     if (!grid[index]) {
-      move(index, players.computer);
+      // Delay computer moves to make them more natural
+      setTimeout(() => move(index, players.computer), 500);
       setNextMove(players.human);
     }
   }, [move, grid, players]);
