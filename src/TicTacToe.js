@@ -14,15 +14,16 @@ import { switchPlayer } from "./utils";
 import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
 
+const arr = new Array(DIMS * DIMS).fill(null);
+const board = new BoardClass();
+
 const TicTacToe = () => {
   const [players, setPlayers] = useState({ human: null, computer: null });
   const [gameState, setGameState] = useState(GAME_STATES.notStarted);
-  const arr = new Array(DIMS * DIMS).fill(null);
   const [grid, setGrid] = useState(arr);
   const [winner, setWinner] = useState(null);
   const [nextMove, setNextMove] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const board = new BoardClass();
 
   useEffect(() => {
     const winner = board.getWinner(grid);
@@ -47,7 +48,7 @@ const TicTacToe = () => {
     if (winner !== null && gameState !== GAME_STATES.over) {
       declareWinner(winner);
     }
-  }, [board, gameState, grid, nextMove]);
+  }, [gameState, grid, nextMove]);
 
   const move = useCallback(
     (index, player) => {
@@ -66,8 +67,10 @@ const TicTacToe = () => {
     // Important to pass a copy of grid here
     const board = new BoardClass(grid.concat());
     const index = minimax(board, players.computer)[1];
-    move(index, players.computer);
-    setNextMove(players.human);
+    if (!grid[index]) {
+      move(index, players.computer);
+      setNextMove(players.human);
+    }
   }, [move, grid, players]);
 
   useEffect(() => {
@@ -77,8 +80,10 @@ const TicTacToe = () => {
   }, [nextMove, computerMove, players.computer]);
 
   const humanMove = index => {
-    move(index, players.human);
-    setNextMove(players.computer);
+    if (!grid[index]) {
+      move(index, players.human);
+      setNextMove(players.computer);
+    }
   };
 
   const choosePlayer = option => {
