@@ -14,7 +14,7 @@ import { switchPlayer } from "./utils";
 import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
 
-const arr = new Array(DIMS * DIMS).fill(null);
+const arr = new Array(DIMS ** 2).fill(null);
 const board = new BoardClass();
 
 const TicTacToe = () => {
@@ -64,9 +64,9 @@ const TicTacToe = () => {
   );
 
   const computerMove = useCallback(() => {
-    // Important to pass a copy of grid here
+    // Important to pass a copy of the grid here
     const board = new BoardClass(grid.concat());
-    const index = minimax(board, players.computer)[1];
+    const index = board.isEmpty(grid) ? 4 : minimax(board, players.computer)[1];
     if (!grid[index]) {
       move(index, players.computer);
       setNextMove(players.human);

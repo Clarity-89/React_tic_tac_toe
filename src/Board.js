@@ -1,8 +1,8 @@
-import { DRAW } from "./constants";
+import { DIMS, DRAW } from "./constants";
 
 export default class Board {
   constructor(grid) {
-    this.grid = grid || new Array(9).fill(null);
+    this.grid = grid || new Array(DIMS ** 2).fill(null);
   }
 
   makeMove = (square, player) => {
@@ -18,6 +18,11 @@ export default class Board {
       if (square === null) squares.push(i);
     });
     return squares;
+  };
+
+  isEmpty = (grid = this.grid) => {
+    console.log("gr", grid);
+    return this.getEmptySquares(grid).length === DIMS ** 2;
   };
 
   getWinner = (grid = this.grid) => {
