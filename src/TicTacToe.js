@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
   PLAYER_X,
   PLAYER_O,
-  SQUARE_WIDTH,
+  SQUARE_DIMS,
   DRAW,
   GAME_STATES,
   DIMS
@@ -121,8 +121,11 @@ const TicTacToe = () => {
     <Screen>
       <Inner>
         <ChooseText>Choose your player</ChooseText>
-        <span onClick={() => choosePlayer(PLAYER_X)}>X</span> or{" "}
-        <span onClick={() => choosePlayer(PLAYER_O)}>O</span>
+        <ButtonRow>
+          <button onClick={() => choosePlayer(PLAYER_X)}>X</button>
+          <p>or</p>
+          <button onClick={() => choosePlayer(PLAYER_O)}>O</button>
+        </ButtonRow>
       </Inner>
     </Screen>
   ) : (
@@ -152,7 +155,8 @@ const TicTacToe = () => {
 
 const Container = styled.div`
   display: flex;
-  width: ${({ dims }) => `${dims * (SQUARE_WIDTH + 5)}px`};
+  justify-content: center;
+  width: ${({ dims }) => `${dims * (SQUARE_DIMS + 5)}px`};
   flex-flow: wrap;
 `;
 
@@ -160,21 +164,36 @@ const Square = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${SQUARE_WIDTH}px;
-  height: ${SQUARE_WIDTH}px;
-  border: 1px solid black;
+  width: ${SQUARE_DIMS}px;
+  height: ${SQUARE_DIMS}px;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  border: 2px solid #41403e;
 
   &:hover {
     cursor: pointer;
   }
 `;
 
-const Marker = styled.span`
-  font-size: 48px;
+const Marker = styled.p`
+  font-size: 68px;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  width: 150px;
+  justify-content: space-between;
 `;
 
 const Screen = styled.div``;
-const Inner = styled.div``;
+
+const Inner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 const ChooseText = styled.p``;
 
 TicTacToe.propTypes = {

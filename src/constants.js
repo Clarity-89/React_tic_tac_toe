@@ -8,7 +8,7 @@ export const SCORES = {
   0: 0,
   2: -1
 };
-export const SQUARE_WIDTH = 50;
+export const SQUARE_DIMS = 100;
 export const GAME_STATES = {
   notStarted: "not_started",
   inProgress: "in_progress",
