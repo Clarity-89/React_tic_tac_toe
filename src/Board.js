@@ -48,6 +48,7 @@ export default class Board {
         this.winningIndex = i;
       } else if (res === null && this.getEmptySquares(grid).length === 0) {
         res = DRAW;
+        this.winningIndex = null;
       }
     });
     return res;

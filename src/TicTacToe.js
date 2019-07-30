@@ -26,7 +26,7 @@ const TicTacToe = () => {
   const [winner, setWinner] = useState(null);
   const [nextMove, setNextMove] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [mode, setMode] = useState(GAME_MODES.difficult);
+  const [mode, setMode] = useState(GAME_MODES.medium);
 
   /**
    * On every move, check if there is a winner. If yes, set game state to over and open result modal
@@ -92,7 +92,14 @@ const TicTacToe = () => {
         while (!emptyIndices.includes(index)) index = getRandomInt(0, 8);
         break;
       case GAME_MODES.medium:
-        index = getRandomInt(0, 8);
+        // Medium level is basically ~half of the moves are minimax and the other ~half random
+        const smartMove = !board.isEmpty(grid) && Math.random() < 0.5;
+        if (smartMove) {
+          index = minimax(board, players.computer)[1];
+        } else {
+          index = getRandomInt(0, 8);
+          while (!emptyIndices.includes(index)) index = getRandomInt(0, 8);
+        }
         break;
       case GAME_MODES.difficult:
       default:
