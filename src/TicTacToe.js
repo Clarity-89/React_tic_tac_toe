@@ -7,7 +7,8 @@ import {
   SQUARE_DIMS,
   DRAW,
   GAME_STATES,
-  DIMS
+  DIMS,
+  GAME_MODES
 } from "./constants";
 import BoardClass from "./Board";
 import { getRandomInt, switchPlayer } from "./utils";
@@ -25,6 +26,7 @@ const TicTacToe = () => {
   const [winner, setWinner] = useState(null);
   const [nextMove, setNextMove] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [mode, setMode] = useState(GAME_MODES.difficult);
 
   /**
    * On every move, check if there is a winner. If yes, set game state to over and open result modal
@@ -82,14 +84,27 @@ const TicTacToe = () => {
   const computerMove = useCallback(() => {
     // Important to pass a copy of the grid here
     const board = new BoardClass(grid.concat());
-    const index = board.isEmpty(grid)
-      ? getRandomInt(0, 8)
-      : minimax(board, players.computer)[1];
+    const emptyIndices = board.getEmptySquares(grid);
+    let index;
+    switch (mode) {
+      case GAME_MODES.easy:
+        index = getRandomInt(0, 8);
+        while (!emptyIndices.includes(index)) index = getRandomInt(0, 8);
+        break;
+      case GAME_MODES.medium:
+        index = getRandomInt(0, 8);
+        break;
+      case GAME_MODES.difficult:
+      default:
+        index = board.isEmpty(grid)
+          ? getRandomInt(0, 8)
+          : minimax(board, players.computer)[1];
+    }
     if (!grid[index]) {
       move(index, players.computer);
       setNextMove(players.human);
     }
-  }, [move, grid, players]);
+  }, [move, grid, players, mode]);
 
   /**
    * Make computer move when it's computer's turn
@@ -124,8 +139,25 @@ const TicTacToe = () => {
     setModalOpen(false);
   };
 
+  const changeMode = e => {
+    setMode(e.target.value);
+  };
+
   return gameState === GAME_STATES.notStarted ? (
     <Screen>
+      <Inner>
+        <ChooseText>Select difficulty</ChooseText>
+        <select onChange={changeMode} value={mode}>
+          {Object.keys(GAME_MODES).map(key => {
+            const gameMode = GAME_MODES[key];
+            return (
+              <option key={gameMode} value={gameMode}>
+                {key}
+              </option>
+            );
+          })}
+        </select>
+      </Inner>
       <Inner>
         <ChooseText>Choose your player</ChooseText>
         <ButtonRow>
@@ -150,6 +182,11 @@ const TicTacToe = () => {
           </Square>
         );
       })}
+      <Strikethrough
+        styles={
+          gameState === GAME_STATES.over && board.getStrikethroughStyles(grid)
+        }
+      />
       <ResultModal
         isOpen={modalOpen}
         winner={winner}
@@ -165,6 +202,7 @@ const Container = styled.div`
   justify-content: center;
   width: ${({ dims }) => `${dims * (SQUARE_DIMS + 5)}px`};
   flex-flow: wrap;
+  position: relative;
 `;
 
 const Square = styled.div`
@@ -196,8 +234,17 @@ const Inner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 30px;
 `;
 const ChooseText = styled.p``;
+
+const Strikethrough = styled.div`
+  position: absolute;
+  ${({ styles }) => styles}
+  background-color: indianred;
+  height: 5px;
+  width: ${({ styles }) => !styles && "0px"};
+`;
 
 TicTacToe.propTypes = {
   dims: PropTypes.number

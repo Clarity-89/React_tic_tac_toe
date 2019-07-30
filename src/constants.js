@@ -14,3 +14,9 @@ export const GAME_STATES = {
   inProgress: "in_progress",
   over: "over"
 };
+
+export const GAME_MODES = {
+  easy: "easy",
+  medium: "medium",
+  difficult: "difficult"
+};
