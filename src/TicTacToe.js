@@ -89,7 +89,9 @@ const TicTacToe = () => {
     switch (mode) {
       case GAME_MODES.easy:
         index = getRandomInt(0, 8);
-        while (!emptyIndices.includes(index)) index = getRandomInt(0, 8);
+        while (!emptyIndices.includes(index)) {
+          index = getRandomInt(0, 8);
+        }
         break;
       case GAME_MODES.medium:
         // Medium level is basically ~half of the moves are minimax and the other ~half random
@@ -98,7 +100,9 @@ const TicTacToe = () => {
           index = minimax(board, players.computer)[1];
         } else {
           index = getRandomInt(0, 8);
-          while (!emptyIndices.includes(index)) index = getRandomInt(0, 8);
+          while (!emptyIndices.includes(index)) {
+            index = getRandomInt(0, 8);
+          }
         }
         break;
       case GAME_MODES.difficult:
@@ -118,14 +122,18 @@ const TicTacToe = () => {
    */
   useEffect(() => {
     let timeout;
-    if (nextMove !== null && nextMove === players.computer) {
+    if (
+      nextMove !== null &&
+      nextMove === players.computer &&
+      gameState !== GAME_STATES.over
+    ) {
       // Delay computer moves to make them more natural
       timeout = setTimeout(() => {
         computerMove();
       }, 500);
     }
     return () => timeout && clearTimeout(timeout);
-  }, [nextMove, computerMove, players.computer]);
+  }, [nextMove, computerMove, players.computer, gameState]);
 
   const humanMove = index => {
     if (!grid[index] && nextMove === players.human) {
