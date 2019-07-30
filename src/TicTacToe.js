@@ -86,8 +86,7 @@ const TicTacToe = () => {
       ? getRandomInt(0, 8)
       : minimax(board, players.computer)[1];
     if (!grid[index]) {
-      // Delay computer moves to make them more natural
-      setTimeout(() => move(index, players.computer), 500);
+      move(index, players.computer);
       setNextMove(players.human);
     }
   }, [move, grid, players]);
@@ -96,13 +95,18 @@ const TicTacToe = () => {
    * Make computer move when it's computer's turn
    */
   useEffect(() => {
+    let timeout;
     if (nextMove !== null && nextMove === players.computer) {
-      computerMove();
+      // Delay computer moves to make them more natural
+      timeout = setTimeout(() => {
+        computerMove();
+      }, 500);
     }
+    return () => timeout && clearTimeout(timeout);
   }, [nextMove, computerMove, players.computer]);
 
   const humanMove = index => {
-    if (!grid[index]) {
+    if (!grid[index] && nextMove === players.human) {
       move(index, players.human);
       setNextMove(players.computer);
     }
