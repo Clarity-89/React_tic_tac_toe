@@ -10,14 +10,14 @@ import {
   DIMS,
   GAME_MODES
 } from "./constants";
-import BoardClass from "./Board";
+import Board from "./Board";
 import { getRandomInt, switchPlayer } from "./utils";
 import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
 import { border } from "./styles";
 
 const arr = new Array(DIMS ** 2).fill(null);
-const board = new BoardClass();
+const board = new Board();
 
 const TicTacToe = () => {
   const [players, setPlayers] = useState({ human: null, computer: null });
@@ -83,7 +83,7 @@ const TicTacToe = () => {
    */
   const computerMove = useCallback(() => {
     // Important to pass a copy of the grid here
-    const board = new BoardClass(grid.concat());
+    const board = new Board(grid.concat());
     const emptyIndices = board.getEmptySquares(grid);
     let index;
     switch (mode) {
