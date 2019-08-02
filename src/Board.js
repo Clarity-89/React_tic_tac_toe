@@ -22,7 +22,6 @@ export default class Board {
   };
 
   isEmpty = (grid = this.grid) => {
-    console.log("gr", grid);
     return this.getEmptySquares(grid).length === DIMS ** 2;
   };
 
