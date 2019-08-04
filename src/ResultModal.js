@@ -47,9 +47,8 @@ const ModalWrapper = styled.div`
   height: 100%;
   align-items: center;
   backface-visibility: hidden;
-  border: 2px solid #e6e7e9;
   padding: 1.25rem;
-  ${border}
+  ${border};
 `;
 
 const ModalTitle = styled.p`
