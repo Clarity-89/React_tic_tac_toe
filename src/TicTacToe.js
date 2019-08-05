@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import {
   PLAYER_X,
   PLAYER_O,
@@ -199,7 +198,7 @@ const TicTacToe = () => {
       })}
       <Strikethrough
         styles={
-          gameState === GAME_STATES.over && board.getStrikethroughStyles(grid)
+          gameState === GAME_STATES.over && board.getStrikethroughStyles()
         }
       />
       <ResultModal
@@ -226,7 +225,7 @@ const Square = styled.div`
   align-items: center;
   width: ${SQUARE_DIMS}px;
   height: ${SQUARE_DIMS}px;
-  ${border}
+  ${border};
 
   &:hover {
     cursor: pointer;
@@ -261,11 +260,4 @@ const Strikethrough = styled.div`
   width: ${({ styles }) => !styles && "0px"};
 `;
 
-TicTacToe.propTypes = {
-  dims: PropTypes.number
-};
-
-TicTacToe.defaultProps = {
-  dims: 3
-};
 export default TicTacToe;

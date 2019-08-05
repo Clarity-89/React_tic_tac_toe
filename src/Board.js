@@ -53,6 +53,9 @@ export default class Board {
     return res;
   };
 
+  /**
+   * Get the styles for strike through based on the combination that won
+   */
   getStrikethroughStyles = () => {
     const defaultWidth = 285;
     const diagonalWidth = 400;
