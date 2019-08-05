@@ -5,8 +5,7 @@ import { border } from "./styles";
 
 const customStyles = {
   overlay: {
-    backgroundColor: "rgba(0,0,0, 0.6)",
-    zIndex: 1049
+    backgroundColor: "rgba(0,0,0, 0.6)"
   }
 };
 
@@ -36,7 +35,6 @@ const StyledModal = styled(Modal)`
   outline: none;
   display: flex;
   flex-direction: column;
-  z-index: 1050;
 `;
 const ModalWrapper = styled.div`
   display: flex;
