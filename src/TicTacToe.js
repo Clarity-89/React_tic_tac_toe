@@ -233,6 +233,8 @@ const Square = styled.div`
   }
 `;
 
+Square.displayName = "Square";
+
 const Marker = styled.p`
   font-size: 68px;
 `;
