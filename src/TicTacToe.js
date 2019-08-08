@@ -18,10 +18,10 @@ import { border } from "./styles";
 const arr = new Array(DIMS ** 2).fill(null);
 const board = new Board();
 
-const TicTacToe = () => {
+const TicTacToe = ({ squares = arr }) => {
   const [players, setPlayers] = useState({ human: null, computer: null });
   const [gameState, setGameState] = useState(GAME_STATES.notStarted);
-  const [grid, setGrid] = useState(arr);
+  const [grid, setGrid] = useState(squares);
   const [winner, setWinner] = useState(null);
   const [nextMove, setNextMove] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -135,6 +135,7 @@ const TicTacToe = () => {
   }, [nextMove, computerMove, players.computer, gameState]);
 
   const humanMove = index => {
+    console.log("grid", grid);
     if (!grid[index] && nextMove === players.human) {
       move(index, players.human);
       setNextMove(players.computer);
@@ -188,7 +189,7 @@ const TicTacToe = () => {
 
         return (
           <Square
-            data-testid="square"
+            data-testid={`square_${index}`}
             key={index}
             onClick={() => humanMove(index)}
           >
