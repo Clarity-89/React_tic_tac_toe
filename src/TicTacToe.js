@@ -135,7 +135,6 @@ const TicTacToe = ({ squares = arr }) => {
   }, [nextMove, computerMove, players.computer, gameState]);
 
   const humanMove = index => {
-    console.log("grid", grid);
     if (!grid[index] && nextMove === players.human) {
       move(index, players.human);
       setNextMove(players.computer);

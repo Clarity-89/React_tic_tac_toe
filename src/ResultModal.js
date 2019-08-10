@@ -11,7 +11,12 @@ const customStyles = {
 
 export const ResultModal = ({ isOpen, close, startNewGame, winner }) => {
   return (
-    <StyledModal isOpen={isOpen} onRequestClose={close} style={customStyles}>
+    <StyledModal
+      isOpen={isOpen}
+      onRequestClose={close}
+      style={customStyles}
+      ariaHideApp={false}
+    >
       <ModalWrapper>
         <ModalTitle>Game over</ModalTitle>
         <ModalContent>{winner}</ModalContent>
@@ -62,6 +67,7 @@ const ModalContent = styled.p`
   flex: 1 1 auto;
   text-align: center;
 `;
+ModalContent.displayName = "ModalContent";
 
 const ModalFooter = styled.div`
   display: flex;
