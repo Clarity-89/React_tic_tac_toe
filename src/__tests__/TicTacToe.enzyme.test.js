@@ -9,14 +9,19 @@ import { PLAYER_O, PLAYER_X } from "../constants";
 configure({ adapter: new Adapter() });
 jest.useFakeTimers();
 
+// Helper function to get button by a text
+const findButtonByText = (wrapper, text) => {
+  return wrapper.findWhere(
+    component => component.name() === "button" && component.text() === text
+  );
+};
+
 it("should render board with correct number of squares", () => {
   // Render the game component
   const wrapper = mount(<TicTacToe />);
 
   // Find the 'X' button
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
 
   // Press it
   buttonX.simulate("click");
@@ -28,9 +33,7 @@ it("should render board with correct number of squares", () => {
 it("should register and display result of human player's move", async () => {
   // Render the game component
   const wrapper = mount(<TicTacToe />);
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
   const firstSquare = wrapper.find("Square").at(0);
@@ -48,9 +51,7 @@ it("should not make a move if the square is not empty", () => {
       squares={[PLAYER_X, null, PLAYER_O, null, null, null, null, null, null]}
     />
   );
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
   // Get non-empty square
@@ -63,7 +64,7 @@ it("should not make a move if the square is not empty", () => {
   expect(nonEmptySquare.text()).toBe("O");
 });
 
-it("should correctly show Player X as a winner", async () => {
+it("should correctly show Player X as a winner", () => {
   // prettier-ignore
   const grid = [
     PLAYER_X, PLAYER_X, null,
@@ -71,9 +72,7 @@ it("should correctly show Player X as a winner", async () => {
     PLAYER_X, null,     PLAYER_O
   ];
   const wrapper = mount(<TicTacToe squares={grid} />);
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
   // Make the winning move
@@ -92,7 +91,7 @@ it("should correctly show Player X as a winner", async () => {
   expect(wrapper.find("ModalContent").text()).toBe("Player X wins!");
 });
 
-it("should display the draw result when it's a draw", async () => {
+it("should display the draw result when it's a draw", () => {
   // prettier-ignore
   const grid = [
     PLAYER_X, PLAYER_X, PLAYER_O,
@@ -100,9 +99,7 @@ it("should display the draw result when it's a draw", async () => {
     PLAYER_X, PLAYER_X, PLAYER_O
   ];
   const wrapper = mount(<TicTacToe squares={grid} />);
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
   // Make the winning move
@@ -121,7 +118,7 @@ it("should display the draw result when it's a draw", async () => {
   expect(wrapper.find("ModalContent").text()).toBe("It's a draw");
 });
 
-it("should correctly show Player O as a winner", async () => {
+it("should correctly show Player O as a winner", () => {
   // prettier-ignore
   const grid = [
     PLAYER_O, null,     PLAYER_O,
@@ -129,9 +126,7 @@ it("should correctly show Player O as a winner", async () => {
     null,     PLAYER_X, null
   ];
   const wrapper = mount(<TicTacToe squares={grid} />);
-  const buttonX = wrapper.findWhere(
-    component => component.name() === "button" && component.text() === "X"
-  );
+  const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
   // Make the winning move
@@ -143,10 +138,7 @@ it("should correctly show Player O as a winner", async () => {
   // Wait for the computer move
   act(() => {
     jest.runAllTimers();
-  });
-
-  // Run timers again for the result modal to appear
-  act(() => {
+    // Run timers again for the result modal to appear
     jest.runAllTimers();
   });
 
@@ -154,4 +146,40 @@ it("should correctly show Player O as a winner", async () => {
 
   // Check that result is declared properly
   expect(wrapper.find("ModalContent").text()).toBe("Player O wins!");
+});
+
+it("should start a new game after 'Start over' button is pressed", () => {
+  // prettier-ignore
+  const grid = [
+    PLAYER_O, null,     PLAYER_O,
+    PLAYER_X, PLAYER_O, null,
+    null,     PLAYER_X, PLAYER_X
+  ];
+  const wrapper = mount(<TicTacToe squares={grid} />);
+  const buttonX = findButtonByText(wrapper, "X");
+  buttonX.simulate("click");
+
+  // Make the winning move
+  wrapper
+    .find("Square")
+    .at(6)
+    .simulate("click");
+
+  act(() => {
+    jest.runAllTimers();
+  });
+
+  // Re-render component
+  wrapper.update();
+
+  // Get restart button and click it
+  const restartButton = findButtonByText(wrapper, "Start over");
+  restartButton.simulate("click");
+
+  // Verify that new game screen is shown
+  const choosePlayer = wrapper.findWhere(
+    component =>
+      component.name() === "p" && component.text() === "Choose your player"
+  );
+  expect(choosePlayer.length).toBe(1);
 });
