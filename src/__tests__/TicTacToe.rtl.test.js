@@ -69,7 +69,7 @@ it("should correctly show Player X as a winner", async () => {
   expect(getByText("Player X wins!")).toBeInTheDocument();
 });
 
-it("should display the draw result when it's a draw", async () => {
+it("should correctly display the draw result", async () => {
   // prettier-ignore
   const grid = [
     PLAYER_X, PLAYER_X, PLAYER_O,
@@ -79,7 +79,7 @@ it("should display the draw result when it's a draw", async () => {
   const { getByTestId, getByText } = render(<TicTacToe squares={grid} />);
   fireEvent.click(getByText("X"));
 
-  // Make the winning move
+  // Make the final move
   fireEvent.click(getByTestId("square_5"));
 
   // Wait for result modal to appear
@@ -99,7 +99,7 @@ it("should correctly show Player O as a winner", async () => {
   const { getByTestId, getByText } = render(<TicTacToe squares={grid} />);
   fireEvent.click(getByText("X"));
 
-  // Make the winning move
+  // Make the move
   fireEvent.click(getByTestId("square_6"));
 
   // Wait for result modal to appear

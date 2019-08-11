@@ -60,7 +60,7 @@ it("should not make a move if the square is not empty", () => {
   // Click it
   nonEmptySquare.simulate("click");
 
-  // Check that test content stays the same
+  // Check that text content stays the same
   expect(nonEmptySquare.text()).toBe("O");
 });
 
@@ -91,7 +91,7 @@ it("should correctly show Player X as a winner", () => {
   expect(wrapper.find("ModalContent").text()).toBe("Player X wins!");
 });
 
-it("should display the draw result when it's a draw", () => {
+it("should correctly display the draw result", () => {
   // prettier-ignore
   const grid = [
     PLAYER_X, PLAYER_X, PLAYER_O,
@@ -102,7 +102,7 @@ it("should display the draw result when it's a draw", () => {
   const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
-  // Make the winning move
+  // Make the final move
   wrapper
     .find("Square")
     .at(5)
@@ -129,7 +129,7 @@ it("should correctly show Player O as a winner", () => {
   const buttonX = findButtonByText(wrapper, "X");
   buttonX.simulate("click");
 
-  // Make the winning move
+  // Make the move
   wrapper
     .find("Square")
     .at(6)
