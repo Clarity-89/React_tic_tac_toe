@@ -87,10 +87,9 @@ const TicTacToe = ({ squares = arr }) => {
     let index;
     switch (mode) {
       case GAME_MODES.easy:
-        index = getRandomInt(0, 8);
-        while (!emptyIndices.includes(index)) {
+        do {
           index = getRandomInt(0, 8);
-        }
+        } while (!emptyIndices.includes(index));
         break;
       case GAME_MODES.medium:
         // Medium level is basically ~half of the moves are minimax and the other ~half random
@@ -98,10 +97,9 @@ const TicTacToe = ({ squares = arr }) => {
         if (smartMove) {
           index = minimax(board, players.computer)[1];
         } else {
-          index = getRandomInt(0, 8);
-          while (!emptyIndices.includes(index)) {
+          do {
             index = getRandomInt(0, 8);
-          }
+          } while (!emptyIndices.includes(index));
         }
         break;
       case GAME_MODES.difficult:
