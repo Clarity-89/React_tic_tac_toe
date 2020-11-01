@@ -9,7 +9,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-modal": "^3.11.2",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^4.0.0",
     "styled-components": "^4.4.1"
   },
   "scripts": {
@@ -36,8 +36,8 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^8.0.9",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "prettier": "^1.19.1"
