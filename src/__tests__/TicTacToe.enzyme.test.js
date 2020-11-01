@@ -7,7 +7,6 @@ import TicTacToe from "../TicTacToe";
 import { PLAYER_O, PLAYER_X } from "../constants";
 
 configure({ adapter: new Adapter() });
-jest.useFakeTimers();
 
 // Helper function to get button by a text
 const findButtonByText = (wrapper, text) => {
@@ -15,6 +14,10 @@ const findButtonByText = (wrapper, text) => {
     component => component.name() === "button" && component.text() === text
   );
 };
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
 
 it("should render board with correct number of squares", () => {
   // Render the game component
@@ -137,8 +140,6 @@ it("should correctly show Player O as a winner", () => {
 
   // Wait for the computer move
   act(() => {
-    jest.runAllTimers();
-    // Run timers again for the result modal to appear
     jest.runAllTimers();
   });
 
