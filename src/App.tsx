@@ -1,9 +1,8 @@
-import React from "react";
 import styled from "styled-components";
 import TicTacToe from "./TicTacToe";
 import "papercss/dist/paper.min.css";
 
-function App() {
+export default function App() {
   return (
     <>
       <Main>
@@ -37,4 +36,3 @@ const Footer = styled.footer`
 const FooterInner = styled.div`
   padding: 16px 0;
 `;
-export default App;
