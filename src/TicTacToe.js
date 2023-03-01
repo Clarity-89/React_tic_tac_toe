@@ -6,8 +6,8 @@ import {
   SQUARE_DIMS,
   DRAW,
   GAME_STATES,
-  DIMS,
-  GAME_MODES
+  DIMENSIONS,
+  GAME_MODES,
 } from "./constants";
 import Board from "./Board";
 import { getRandomInt, switchPlayer } from "./utils";
@@ -15,7 +15,7 @@ import { minimax } from "./minimax";
 import { ResultModal } from "./ResultModal";
 import { border } from "./styles";
 
-const arr = new Array(DIMS ** 2).fill(null);
+const arr = new Array(DIMENSIONS ** 2).fill(null);
 const board = new Board();
 
 const TicTacToe = ({ squares = arr }) => {
@@ -32,7 +32,7 @@ const TicTacToe = ({ squares = arr }) => {
    */
   useEffect(() => {
     const winner = board.getWinner(grid);
-    const declareWinner = winner => {
+    const declareWinner = (winner) => {
       let winnerStr;
       switch (winner) {
         case PLAYER_X:
@@ -65,7 +65,7 @@ const TicTacToe = ({ squares = arr }) => {
   const move = useCallback(
     (index, player) => {
       if (player && gameState === GAME_STATES.inProgress) {
-        setGrid(grid => {
+        setGrid((grid) => {
           const gridCopy = grid.concat();
           gridCopy[index] = player;
           return gridCopy;
@@ -132,14 +132,14 @@ const TicTacToe = ({ squares = arr }) => {
     return () => timeout && clearTimeout(timeout);
   }, [nextMove, computerMove, players.computer, gameState]);
 
-  const humanMove = index => {
+  const humanMove = (index) => {
     if (!grid[index] && nextMove === players.human) {
       move(index, players.human);
       setNextMove(players.computer);
     }
   };
 
-  const choosePlayer = option => {
+  const choosePlayer = (option) => {
     setPlayers({ human: option, computer: switchPlayer(option) });
     setGameState(GAME_STATES.inProgress);
     setNextMove(PLAYER_X);
@@ -151,7 +151,7 @@ const TicTacToe = ({ squares = arr }) => {
     setModalOpen(false);
   };
 
-  const changeMode = e => {
+  const changeMode = (e) => {
     setMode(e.target.value);
   };
 
@@ -160,7 +160,7 @@ const TicTacToe = ({ squares = arr }) => {
       <Inner>
         <ChooseText>Select difficulty</ChooseText>
         <select onChange={changeMode} value={mode}>
-          {Object.keys(GAME_MODES).map(key => {
+          {Object.keys(GAME_MODES).map((key) => {
             const gameMode = GAME_MODES[key];
             return (
               <option key={gameMode} value={gameMode}>
@@ -180,7 +180,7 @@ const TicTacToe = ({ squares = arr }) => {
       </Inner>
     </Screen>
   ) : (
-    <Container dims={DIMS}>
+    <Container dims={DIMENSIONS}>
       {grid.map((value, index) => {
         const isActive = value !== null;
 

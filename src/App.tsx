@@ -20,10 +20,9 @@ export default function App() {
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex: 1 0 auto;
+  height: 100vh;
 `;
 
 const Footer = styled.footer`

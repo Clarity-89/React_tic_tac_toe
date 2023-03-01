@@ -1,8 +1,8 @@
-import { DIMS, DRAW } from "./constants";
+import { DIMENSIONS, DRAW } from "./constants";
 
 export default class Board {
   constructor(grid) {
-    this.grid = grid || new Array(DIMS ** 2).fill(null);
+    this.grid = grid || new Array(DIMENSIONS ** 2).fill(null);
     this.winningIndex = null;
   }
 
@@ -22,7 +22,7 @@ export default class Board {
   };
 
   isEmpty = (grid = this.grid) => {
-    return this.getEmptySquares(grid).length === DIMS ** 2;
+    return this.getEmptySquares(grid).length === DIMENSIONS ** 2;
   };
 
   getWinner = (grid = this.grid) => {
@@ -34,7 +34,7 @@ export default class Board {
       [1, 4, 7],
       [2, 5, 8],
       [0, 4, 8],
-      [2, 4, 6]
+      [2, 4, 6],
     ];
     let res = null;
     winningCombos.forEach((el, i) => {
