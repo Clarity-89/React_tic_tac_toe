@@ -5,11 +5,17 @@ import { border } from "./styles";
 
 const customStyles = {
   overlay: {
-    backgroundColor: "rgba(0,0,0, 0.6)"
-  }
+    backgroundColor: "rgba(0,0,0, 0.6)",
+  },
 };
 
-export const ResultModal = ({ isOpen, close, startNewGame, winner }) => {
+interface Props {
+  isOpen: boolean;
+  close: () => void;
+  startNewGame: () => void;
+  winner: null | string;
+}
+export const ResultModal = ({ isOpen, close, startNewGame, winner }: Props) => {
   return (
     <StyledModal
       isOpen={isOpen}
@@ -44,7 +50,6 @@ const StyledModal = styled(Modal)`
 const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px;
   background-color: #fff;
   max-height: 100%;
   height: 100%;

@@ -1,12 +1,15 @@
 import { DIMENSIONS, DRAW } from "./constants";
 
+type Grid = Array<null | number>;
 export default class Board {
-  constructor(grid) {
+  grid: Grid;
+  winningIndex: null | number;
+  constructor(grid?: Grid) {
     this.grid = grid || new Array(DIMENSIONS ** 2).fill(null);
     this.winningIndex = null;
   }
 
-  makeMove = (square, player) => {
+  makeMove = (square: number, player: number) => {
     if (this.grid[square] === null) {
       this.grid[square] = player;
     }
@@ -14,7 +17,7 @@ export default class Board {
 
   // Collect indices of empty squares and return them
   getEmptySquares = (grid = this.grid) => {
-    let squares = [];
+    let squares: number[] = [];
     grid.forEach((square, i) => {
       if (square === null) squares.push(i);
     });
@@ -36,7 +39,7 @@ export default class Board {
       [0, 4, 8],
       [2, 4, 6],
     ];
-    let res = null;
+    let res: null | number = null;
     winningCombos.forEach((el, i) => {
       if (
         grid[el[0]] !== null &&
