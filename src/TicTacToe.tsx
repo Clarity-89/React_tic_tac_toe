@@ -71,7 +71,7 @@ const TicTacToe = ({ squares = arr }: Props) => {
    */
   const move = useCallback(
     (index: number, player: number | null) => {
-      if (player && gameState === GAME_STATES.inProgress) {
+      if (player !== null && gameState === GAME_STATES.inProgress) {
         setGrid((grid) => {
           const gridCopy = grid.concat();
           gridCopy[index] = player;
@@ -115,7 +115,7 @@ const TicTacToe = ({ squares = arr }: Props) => {
           : minimax(board, players.ai!)[1];
     }
 
-    if (index && !grid[index]) {
+    if (index !== null && !grid[index]) {
       if (players.ai !== null) {
         move(index, players.ai);
       }
